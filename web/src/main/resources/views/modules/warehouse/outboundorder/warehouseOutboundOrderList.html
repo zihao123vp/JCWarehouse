@@ -1,0 +1,160 @@
+<% layout('/layouts/default.html', {title: '出库单表管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('出库单表管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('warehouseOutboundOrder:edit')){ %>
+					<a href="${ctx}/warehouse/outboundorder/warehouseOutboundOrder/form" class="btn btn-default btnTool" title="${text('新增出库单表')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${warehouseOutboundOrder}" action="${ctx}/warehouse/outboundorder/warehouseOutboundOrder/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('订单名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="orderName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('出库单类型')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="outboundType" dictType="OUTBOUND_TYPE" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('付款状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="paymentStatus" dictType="PAYMENT_STATUS" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('付款方式')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="paymentType" dictType="PAYMENT_TYPE" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('经销商ID')}：</label>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('经销商名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="merchantName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('订单商品数')}：</label>
+					<div class="control-inline">
+						<#form:input path="productNum" maxlength="11" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('订单总价')}：</label>
+					<div class="control-inline">
+						<#form:input path="orderPrice" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('经销商折扣价')}：</label>
+					<div class="control-inline">
+						<#form:input path="merchantPriceReceivable" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('经销商折扣价')}：</label>
+					<div class="control-inline">
+						<#form:input path="merchantPriceReceived" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('线下优惠价=应收-实收')}：</label>
+					<div class="control-inline">
+						<#form:input path="discount" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审批状态')}：</label>
+					<div class="control-inline">
+						<#form:input path="approvalStatus" maxlength="10" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('remarks')}：</label>
+					<div class="control-inline">
+						<#form:input path="remarks" maxlength="1024" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('订单名称')}', name:'orderName', index:'a.order_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/warehouse/outboundorder/warehouseOutboundOrder/form?id='+row.id+'" class="btnList" data-title="${text('编辑出库单表')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('出库单类型')}', name:'outboundType', index:'a.outbound_type', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('OUTBOUND_TYPE')}, val, '${text('未知')}', true);
+		}},
+		{header:'${text('付款状态')}', name:'paymentStatus', index:'a.payment_status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('PAYMENT_STATUS')}, val, '${text('未知')}', true);
+		}},
+		{header:'${text('付款方式')}', name:'paymentType', index:'a.payment_type', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('PAYMENT_TYPE')}, val, '${text('未知')}', true);
+		}},
+		{header:'${text('经销商名称')}', name:'merchantName', index:'a.merchant_name', width:150, align:"left"},
+		{header:'${text('订单商品数')}', name:'productNum', index:'a.product_num', width:150, align:"center"},
+		{header:'${text('订单总价')}', name:'orderPrice', index:'a.order_price', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text('折扣价(应收)')}', name:'merchantPriceReceivable', index:'a.merchant_price_receivable', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text('折扣价(实收)')}', name:'merchantPriceReceived', index:'a.merchant_price_received', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text('线下优惠价')}', name:'discount', index:'a.discount', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text('审批状态')}', name:'approvalStatus', index:'a.approval_status', width:150, align:"left"},
+		{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);
+		}},
+		{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('warehouseOutboundOrder:edit')){ %>
+				actions.push('<a href="${ctx}/warehouse/outboundorder/warehouseOutboundOrder/form?id='+row.id+'" class="btnList" title="${text('编辑出库单表')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/warehouse/outboundorder/warehouseOutboundOrder/delete?id='+row.id+'" class="btnList" title="${text('删除出库单表')}" data-confirm="${text('确认要删除该出库单表吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
