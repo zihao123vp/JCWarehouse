@@ -19,7 +19,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('订单名称')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="orderName" maxlength="255" class="form-control"/>
+								<#form:input path="orderName" maxlength="255" class="form-control" readonly="true"/>
 							</div>
 						</div>
 					</div>
@@ -59,8 +59,34 @@
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('经销商名称')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
+							<!-- <div class="col-sm-8">
 								<#form:input path="merchantName" maxlength="255" class="form-control"/>
+							</div> -->
+							<div class="col-sm-8">
+								<#form:treeselect id="merchantId" title="${text('经销商名称')}"
+									path="merchantId" labelPath="merchantName"
+									url="${ctx}/warehouse/merchant/warehouseMerchant/treeData"
+									class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('联系电话')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="merchantPhone" maxlength="30" class="form-control" readonly="true"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('联系地址')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="merchantAddress" maxlength="255" class="form-control" readonly="true"/>
 							</div>
 						</div>
 					</div>
@@ -71,7 +97,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('订单商品数')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="productNum" maxlength="11" class="form-control digits"/>
+								<#form:input path="productNum" maxlength="11" class="form-control digits" readonly="true"/>
 							</div>
 						</div>
 					</div>
@@ -80,7 +106,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('订单总价')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="orderPrice" class="form-control number"/>
+								<#form:input path="orderPrice" class="form-control number" readonly="true"/>
 							</div>
 						</div>
 					</div>
@@ -89,38 +115,38 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('经销商折扣价')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('应付金额')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="merchantPriceReceivable" class="form-control number"/>
+								<#form:input path="merchantPriceReceivable" class="form-control number" readonly="true"/>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('经销商折扣价')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('收款金额')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="merchantPriceReceived" class="form-control number"/>
+								<#form:input path="merchantPriceReceived" class="form-control number" placeholder="如未收款，则不填写"/>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-6">
+					<!-- <div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('线下优惠价(=应收-实收)')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('优惠=应收-实收')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="discount" class="form-control number"/>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('审批状态')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="approvalStatus" maxlength="10" class="form-control"/>
+								<#form:input path="approvalStatus" maxlength="10" class="form-control"  readonly="true"/>
 							</div>
 						</div>
 					</div>
@@ -129,7 +155,7 @@
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="control-label col-sm-2" title="">
-								<span class="required hide">*</span> ${text('remarks')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('备注')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-10">
 								<#form:textarea path="remarks" rows="4" maxlength="1024" class="form-control"/>
 							</div>
@@ -139,26 +165,89 @@
 				<h4 class="form-unit">${text('订单-货品关系表')}</h4>
 				<div class="ml10 mr10">
 					<table id="warehouseOrderProductDataGrid"></table>
-					<% if (hasPermi('warehouseOutboundOrder:edit')){ %>
 						<a href="#" id="warehouseOrderProductDataGridAddRowBtn" class="btn btn-primary btn-sm mt10 mb10"><i class="fa fa-plus"></i> ${text('增行')}</a>
-					<% } %>
 				</div>
 			</div>
 			<div class="box-footer">
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
-						<% if (hasPermi('warehouseOutboundOrder:edit')){ %>
 							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
-						<% } %>
 						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
 					</div>
 				</div>
 			</div>
+			
+			
+			<div class="col-sm-8" style="display: none;">
+								<#form:treeselect id="parent" title="${text('上级货品分类表')}"
+									path="merchantPriceReceived" 
+									url="${ctx}/warehouse/warehouseproduct/warehouseAlltype/treeData"
+									class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+							</div>
 		</#form:form>
 	</div>
 </div>
 <% } %>
 <script>
+
+var _thisA;
+function treeselectCallback(id, act, index, layero, nodes){
+	 
+    if (id == 'parent' && (act == 'ok' || act == 'clear')){
+            log(nodes);  // 选择的节点数据
+          
+       if(_thisA) {
+    	   _thisA.val(nodes[0].name);
+    	   _thisA.closest('tr').find('input[name="price"]').val(nodes[0].retail_pro_price);
+    	   _thisA.closest('tr').find('input[name="discountRate"]').val(nodes[0].discount_rate);
+    	   _thisA.closest('tr').find('input[name="exfactoryPrice"]').val(nodes[0].wholesale_price);
+    	   _thisA.closest('tr').find('input[name="unit"]').val(nodes[0].unit);
+    	   _thisA = null;
+       }
+    }
+    if (id == 'merchantId' && (act == 'ok' || act == 'clear')){
+	$("#merchantPhone").val(nodes[0].merchantPhone);
+	$("#merchantAddress").val(nodes[0].merchantAddress);
+    }
+}
+
+
+
+
+function clickProduct(_this) {
+	$('#parentName').click();
+	_thisA = $(_this);
+}
+
+function downProductNum(_this){
+	var exfactoryPrice = $(_this).closest('tr').find('input[name="exfactoryPrice"]').val();
+	var productNum = $(_this).closest('tr').find('input[name="productNumOrder"]').val();
+	productNum = $(_this).closest('tr').find('input[name="subtotal"]').val(exfactoryPrice*productNum);
+	
+	//订单商品数
+	var inputs = $('input[name="productNumOrder"]');
+	var sum = 0;
+	inputs.each(function() {
+		sum += Number($(this).val());
+	});
+	//alert(sum.toFixed(2));
+	$("#productNum").val(sum);
+	
+	//订单总价
+	var inputs_orderPrice = $('input[name="subtotal"]');
+	var sum_orderPrice = 0;
+	inputs_orderPrice.each(function() {
+		sum_orderPrice += Number($(this).val());
+	});
+	//alert(sum.toFixed(2));
+	$("#orderPrice").val(sum_orderPrice);
+	
+	//应付金额
+	$("#merchantPriceReceivable").val(parseInt(sum_orderPrice));
+}
+
+
+
 //初始化订单-货品关系表DataGrid对象
 $("#warehouseOrderProductDataGrid").dataGrid({
 
@@ -170,11 +259,20 @@ $("#warehouseOrderProductDataGrid").dataGrid({
 	columnModel: [
 		{header:'状态', name:'status', editable:true, hidden:true},
 		{header:'主键', name:'id', editable:true, hidden:true},
-		{header:'${text('货品名称')}', name:'productName', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
-		{header:'${text('货品数量')}', name:'productNum', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'11', 'class':'form-control digits'}},
+		{header:'${text('货品名称')}', name:'productName', frozen:true, formatter: function(val, obj, row, act){
+			if(val=='undefined'||val==null){
+				return '<input  class="form-control" style="width: 99.9%;" name="productName" onclick="clickProduct(this)"/> ';
+			}else{
+				return '<input  class="form-control" style="width: 99.9%;" name="productName" value='+val+' onclick="clickProduct(this)"/> ';
+			}
+		}}, 
+		{header:'${text('货品数量')}', name:'productNumOrder', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'11', 'class':'form-control digits','onkeyup':'downProductNum(this)'}},
 		{header:'${text('订单ID')}', name:'orderId.id', editable:true, hidden:true},
-		{header:'${text('单价')}', name:'price', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number'}},
-		{header:'${text('小计')}', name:'subtotal', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number'}},
+		{header:'${text('单位')}', name:'unit', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control','readonly':'true'}},
+		{header:'${text('零售价')}', name:'price', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number','readonly':'true'}},
+		{header:'${text('折扣率')}', name:'discountRate', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number','readonly':'true'}},
+		{header:'${text('拿货价')}', name:'exfactoryPrice', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number','readonly':'true'}},
+		{header:'${text('小计')}', name:'subtotal', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number','readonly':'true'}},
 		{header:'${text('操作')}', name:'actions', width:80, sortable:false, fixed:true, formatter: function(val, obj, row, act){
 			var actions = [];
 			if (val == 'new'){
@@ -190,11 +288,11 @@ $("#warehouseOrderProductDataGrid").dataGrid({
 	editGrid: true,				// 是否是编辑表格
 	editGridInitRowNum: 1,		// 编辑表格的初始化新增行数
 	editGridAddRowBtn: $('#warehouseOrderProductDataGridAddRowBtn'),	// 子表增行按钮
-	editGridAddRowInitData: {id: '', status: Global.STATUS_NORMAL},	// 新增行的时候初始化的数据
+	editGridAddRowInitData: {id: '', status: Global.STATUS_NORMAL},	// 新增行的时	候初始化的数据
 	
 	// 编辑表格的提交数据参数
 	editGridInputFormListName: 'warehouseOrderProductList', // 提交的数据列表名
-	editGridInputFormListAttrs: 'status,id,productId,productName,productNum,orderId.id,orderName,price,subtotal,', // 提交数据列表的属性字段
+	editGridInputFormListAttrs: 'status,id,productId,productName,productNumOrder,orderId.id,orderName,unit,price,discountRate,exfactoryPrice,subtotal,', // 提交数据列表的属性字段
 	
 	// 加载成功后执行事件
 	ajaxSuccess: function(data){
@@ -203,6 +301,8 @@ $("#warehouseOrderProductDataGrid").dataGrid({
 });
 </script>
 <script>
+
+
 $("#inputForm").validate({
 	submitHandler: function(form){
 		js.ajaxSubmitForm($(form), function(data){

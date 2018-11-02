@@ -15,7 +15,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 出库单表Entity
  * @author yzh
- * @version 2018-09-20
+ * @version 2018-10-22
  */
 @Table(name="warehouse_outbound_order", alias="a", columns={
 		@Column(name="id", attrName="id", label="订单ID", isPK=true),
@@ -25,11 +25,13 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="payment_type", attrName="paymentType", label="付款方式"),
 		@Column(name="merchant_id", attrName="merchantId", label="经销商ID"),
 		@Column(name="merchant_name", attrName="merchantName", label="经销商名称", queryType=QueryType.LIKE),
+		@Column(name="merchant_phone", attrName="merchantPhone", label="联系电话"),
+		@Column(name="merchant_address", attrName="merchantAddress", label="联系地址"),
 		@Column(name="product_num", attrName="productNum", label="订单商品数"),
 		@Column(name="order_price", attrName="orderPrice", label="订单总价"),
-		@Column(name="merchant_price_receivable", attrName="merchantPriceReceivable", label="经销商折扣价", comment="经销商折扣价(应收)"),
-		@Column(name="merchant_price_received", attrName="merchantPriceReceived", label="经销商折扣价"),
-		@Column(name="discount", attrName="discount", label="线下优惠价=应收-实收"),
+		@Column(name="merchant_price_receivable", attrName="merchantPriceReceivable", label="应付金额"),
+		@Column(name="merchant_price_received", attrName="merchantPriceReceived", label="收款金额"),
+		@Column(name="discount", attrName="discount", label="优惠=应收-实收"),
 		@Column(name="approval_status", attrName="approvalStatus", label="审批状态", comment="审批状态：待发货、待审核、已审核"),
 		@Column(includeEntity=DataEntity.class),
 	}, orderBy="a.update_date DESC"
@@ -43,11 +45,13 @@ public class WarehouseOutboundOrder extends DataEntity<WarehouseOutboundOrder> {
 	private String paymentType;		// 付款方式
 	private String merchantId;		// 经销商ID
 	private String merchantName;		// 经销商名称
+	private String merchantPhone;		// 联系电话
+	private String merchantAddress;		// 联系地址
 	private Long productNum;		// 订单商品数
 	private Double orderPrice;		// 订单总价
-	private Double merchantPriceReceivable;		// 经销商折扣价(应收)
-	private Double merchantPriceReceived;		// 经销商折扣价
-	private Double discount;		// 线下优惠价=应收-实收
+	private Double merchantPriceReceivable;		// 应付金额
+	private Double merchantPriceReceived;		// 收款金额
+	private Double discount;		// 优惠=应收-实收
 	private String approvalStatus;		// 审批状态：待发货、待审核、已审核
 	private List<WarehouseOrderProduct> warehouseOrderProductList = ListUtils.newArrayList();		// 子表列表
 	
@@ -110,6 +114,24 @@ public class WarehouseOutboundOrder extends DataEntity<WarehouseOutboundOrder> {
 
 	public void setMerchantName(String merchantName) {
 		this.merchantName = merchantName;
+	}
+	
+	@Length(min=0, max=30, message="联系电话长度不能超过 30 个字符")
+	public String getMerchantPhone() {
+		return merchantPhone;
+	}
+
+	public void setMerchantPhone(String merchantPhone) {
+		this.merchantPhone = merchantPhone;
+	}
+	
+	@Length(min=0, max=255, message="联系地址长度不能超过 255 个字符")
+	public String getMerchantAddress() {
+		return merchantAddress;
+	}
+
+	public void setMerchantAddress(String merchantAddress) {
+		this.merchantAddress = merchantAddress;
 	}
 	
 	public Long getProductNum() {

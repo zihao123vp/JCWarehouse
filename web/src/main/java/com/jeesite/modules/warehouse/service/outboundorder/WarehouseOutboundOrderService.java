@@ -19,7 +19,7 @@ import com.jeesite.modules.warehouse.dao.outboundorder.WarehouseOrderProductDao;
 /**
  * 出库单表Service
  * @author yzh
- * @version 2018-09-20
+ * @version 2018-10-22
  */
 @Service
 @Transactional(readOnly=true)

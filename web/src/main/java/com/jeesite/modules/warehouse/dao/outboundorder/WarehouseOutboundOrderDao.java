@@ -10,7 +10,7 @@ import com.jeesite.modules.warehouse.entity.outboundorder.WarehouseOutboundOrder
 /**
  * 出库单表DAO接口
  * @author yzh
- * @version 2018-09-20
+ * @version 2018-10-22
  */
 @MyBatisDao
 public interface WarehouseOutboundOrderDao extends CrudDao<WarehouseOutboundOrder> {

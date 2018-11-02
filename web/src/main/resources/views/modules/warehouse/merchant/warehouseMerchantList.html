@@ -7,6 +7,9 @@
 			</div>
 			<div class="box-tools pull-right">
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<a href="#" class="btn btn-default" id="btnRefreshTree" title="${text('刷新')}"><i class="fa fa-refresh"></i> ${text('刷新')}</a>
+				<a href="#" class="btn btn-default" id="btnExpandTreeNode" title="${text('展开一级')}"><i class="fa fa-angle-double-down"></i> ${text('展开')}</a>
+				<a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="${text('折叠全部')}"><i class="fa fa-angle-double-up"></i> ${text('折叠')}</a>
 				<% if(hasPermi('warehouse:merchant:warehouseMerchant:edit')){ %>
 					<a href="${ctx}/warehouse/merchant/warehouseMerchant/form" class="btn btn-default btnTool" title="${text('新增经销商信息表')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
 				<% } %>
@@ -18,13 +21,31 @@
 				<div class="form-group">
 					<label class="control-label">${text('经销商名称')}：</label>
 					<div class="control-inline">
-						<#form:input path="merchantName" maxlength="255" class="form-control width-120"/>
+						<#form:input path="merchantName" maxlength="100" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('区域类型')}：</label>
+					<div class="control-inline">
+						<#form:input path="areaType" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input path="remarks" maxlength="500" class="form-control width-120"/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label">${text('经销商联系人')}：</label>
 					<div class="control-inline">
-						<#form:input path="merchantContact" maxlength="64" class="form-control width-120"/>
+						<#form:input path="merchantContact" class="form-control width-120"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -36,43 +57,7 @@
 				<div class="form-group">
 					<label class="control-label">${text('联系方式')}：</label>
 					<div class="control-inline">
-						<#form:input path="phone" maxlength="20" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('省ID')}：</label>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('省')}：</label>
-					<div class="control-inline">
-						<#form:input path="provinceName" maxlength="64" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('城市ID')}：</label>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('城市')}：</label>
-					<div class="control-inline">
-						<#form:input path="cityName" maxlength="64" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('经销商固定折扣')}：</label>
-					<div class="control-inline">
-						<#form:input path="fixedDiscount" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('备注信息')}：</label>
-					<div class="control-inline">
-						<#form:input path="remarks" maxlength="1024" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('状态')}：</label>
-					<div class="control-inline width-120">
-						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+						<#form:input path="phone" maxlength="255" class="form-control width-120"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -81,7 +66,6 @@
 				</div>
 			</#form:form>
 			<table id="dataGrid"></table>
-			<div id="dataGridPage"></div>
 		</div>
 	</div>
 </div>
@@ -91,24 +75,20 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text('经销商名称')}', name:'merchantName', index:'a.merchant_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text('经销商名称')}', name:'merchantName', index:'a.merchant_name', width:250, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/warehouse/merchant/warehouseMerchant/form?id='+row.id+'" class="btnList" data-title="${text('编辑经销商信息表')}">'+(val||row.id)+'</a>';
 		}},
+		/* {header:'${text('本级排序号')}', name:'treeSort', index:'a.tree_sort', width:150, align:"center"}, */
+		{header:'${text('经销商名称')}', name:'merchantName', index:'a.merchant_name', width:150, align:"left"},
+		/* {header:'${text('区域类型')}', name:'areaType', index:'a.area_type', width:150, align:"left"}, */
 		{header:'${text('经销商联系人')}', name:'merchantContact', index:'a.merchant_contact', width:150, align:"left"},
 		{header:'${text('地址')}', name:'address', index:'a.address', width:150, align:"left"},
 		{header:'${text('联系方式')}', name:'phone', index:'a.phone', width:150, align:"left"},
-		{header:'${text('省ID')}', name:'provinceId', index:'a.province_id', width:150, align:"left"},
-		{header:'${text('省')}', name:'provinceName', index:'a.province_name', width:150, align:"left"},
-		{header:'${text('城市ID')}', name:'cityId', index:'a.city_id', width:150, align:"left"},
-		{header:'${text('城市')}', name:'cityName', index:'a.city_name', width:150, align:"left"},
-		{header:'${text('经销商固定折扣')}', name:'fixedDiscount', index:'a.fixed_discount', width:150, align:"right", formatter: function(val, obj, row, act){
-			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
-		}},
-		{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
-		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
-		{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+		/* {header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);
-		}},
+		}}, */
+		{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		/* {header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"}, */
 		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('warehouse:merchant:warehouseMerchant:edit')){ %>
@@ -119,12 +99,15 @@ $('#dataGrid').dataGrid({
 				if (row.status == Global.STATUS_DISABLE){
 					actions.push('<a href="${ctx}/warehouse/merchant/warehouseMerchant/enable?id='+row.id+'" class="btnList" title="${text('启用经销商信息表')}" data-confirm="${text('确认要启用该经销商信息表吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
 				}
-				actions.push('<a href="${ctx}/warehouse/merchant/warehouseMerchant/delete?id='+row.id+'" class="btnList" title="${text('删除经销商信息表')}" data-confirm="${text('确认要删除该经销商信息表吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/warehouse/merchant/warehouseMerchant/delete?id='+row.id+'" class="btnList" title="${text('删除经销商信息表')}" data-confirm="${text('确认要删除该经销商信息表及所有子经销商信息表吗？')}" data-deltreenode="'+row.id+'"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/warehouse/merchant/warehouseMerchant/form?parentCode='+row.id+'" class="btnList" title="${text('新增下级经销商信息表')}"><i class="fa fa-plus-square"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}
 	],
-	// 加载成功后执行事件
+	treeGrid: true,			// 启用树结构表格
+	defaultExpandLevel: 0,	// 默认展开的层次
+	expandNodeClearPostData: 'merchantName,areaType,status,remarks,merchantContact,address,phone,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
 	ajaxSuccess: function(data){
 		
 	}
